@@ -1,0 +1,29 @@
+void draw_project_info()
+{
+  hint(DISABLE_DEPTH_TEST);
+  cam.beginHUD();
+  cp5.draw();
+
+  //textFont(mono);
+
+  textAlign(LEFT);
+  pushMatrix();
+  translate(0, 25, 0);
+  textSize(28);
+  fill(0, 0, 0);
+  text("Place Names in the Semantic Space", 35, 30);
+  textSize(16);
+  fill(0, 408, 612, 180);
+  text("Seattle Public Library, Geography & History, Toponym Recognition", 35, 60);
+  textSize(12);
+  fill(0, 408, 612, 120);
+  text("MAT 259 | Winter 2022 | Zilong Liu", 35, 100);  
+  textSize(14);
+  fill(0, 0, 0);
+  text("Hover over a toponym to see its co-occurred toponyms\nalong with the mentioned items.", 1450, 960);
+  popMatrix();
+
+  cam.endHUD();
+  hint(ENABLE_DEPTH_TEST);
+
+}

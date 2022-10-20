@@ -1,0 +1,32 @@
+    import peasy.*;
+import controlP5.*;
+import java.util.*;
+
+PeasyCam cam;
+ControlP5 cp5;
+PFont mono;
+
+RainSystem rs; // Downpour
+SplashSystem ss; // Droplet hits the ground, and splashed 
+PVector gravity = new PVector(0, 0.9, 0);
+
+void setup() {
+  fullScreen(P3D);
+  cam = new PeasyCam(this, 600);
+  cp5 = new ControlP5(this);
+  mono = loadFont("courier.vlw");
+  stroke(255);
+  rs = new RainSystem(20); // 20 drops per frame
+  ss = new SplashSystem();
+  
+}
+
+void draw() {
+  background(0);
+  textMode(SHAPE);
+  colorMode(RGB);
+  rotateX(5.436); // Nice view from this angle
+  rs.run(); // Pouring
+  ss.run(); // Splashing
+  draw_project_info();
+}

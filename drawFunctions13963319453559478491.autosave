@@ -1,0 +1,29 @@
+void draw_project_info()
+{   
+    hint(DISABLE_DEPTH_TEST);
+    cam.beginHUD();
+    cp5.draw();
+
+    textFont(mono);
+    textAlign(LEFT);
+
+    pushMatrix();
+    translate(0, 25, 0);
+    textSize(28);
+    //fill(255, 0, 0);
+    fill(#FFFFFF);
+    text(" KnowWhereGrap Statement", 35, 30);
+    textSize(22);
+    //fill(255, 0, 0,200);
+    fill(#FFFFFF,200);
+    text("Temporal Scoping, Natural Hazards, Knowledge Graph", 35, 60);
+    textSize(18);
+    //fill(255, 0, 0,200);
+    fill(#FFFFFF,200);
+    text("MAT 259 | Winter 2022 | Zilong Liu", 35, 90);
+    popMatrix();
+
+    cam.endHUD();
+    hint(ENABLE_DEPTH_TEST);
+
+}

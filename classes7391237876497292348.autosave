@@ -1,0 +1,153 @@
+  class Hazard{
+  String hazard;
+  String hazard_label;
+  String hazard_type;
+  String hazard_type_label;
+  String time;
+  String time_label;
+  String location;
+  String location_label;
+
+  Hazard(String hazard, String hazard_label, String hazard_type, String hazard_type_label,
+  String time, String time_label, String location, String location_label)
+  {
+    this.hazard = hazard;
+    this.hazard_label = hazard_label;
+    this.hazard_type = hazard_type;
+    this.hazard_type_label = hazard_type_label;
+    this.time = time;
+    this.time_label = time_label;
+    this.location = location;
+    this.location_label = location_label;
+  }
+}
+
+class Droplet{
+  PVector pos; // Keep track droplet position
+  PVector vel; // droplet velocity
+  boolean off; // hit the ground, and die
+  Hazard hazard;
+
+  Droplet(float x, float y, float z, Hazard hazard){
+    pos = new PVector(x,y,z);
+    vel = new PVector();
+    this.hazard = hazard;
+  }
+  
+  void show(){
+    String statement = this.hazard.hazard_label;
+    strokeWeight(1.5);    
+    pushMatrix();
+    translate(pos.x, pos.y, pos.z);
+    rotate(HALF_PI);
+    textSize(40);
+    fill(#008F11);
+    text(statement, 0, 0);
+    popMatrix();
+  }
+  
+  void update(){
+    vel.add(gravity);
+    pos.add(vel);
+    // Hit the ground and splashed
+    if(pos.y > height) {
+      //SplashSystem ss = new SplashSystem();
+      //ss.init(pos.x, height, pos.z, vel.mag(), this.hazard);
+      //ss.run();
+      off = true;
+    }
+  }
+}
+
+class Splash {
+  PVector pos;
+  PVector vel;
+  boolean off;
+  float size;
+  Hazard hazard;
+  
+  Splash(float x, float y, float z, float size, Hazard hazard) {
+    this.pos = new PVector(x, y, z);
+    this.size = random(0, pow(size,0.15));
+    vel = PVector.random3D();
+    vel.mult(random(size/4));
+    this.hazard = hazard;
+  }
+
+  void update() {
+    if (pos.y > height) {
+      off = true;
+      // Only inits another splashes if the size not too small
+      if (size > 1) {
+        // Hit the ground and splashed
+        SplashSystem ss = new SplashSystem();
+        ss.init(pos.x, height, pos.z, size, this.hazard);
+        ss.run();
+      }
+    } else {
+      // Otherwise update it
+      vel.add(gravity);
+      pos.add(vel);
+    }
+  }
+
+  void show() {
+    String place = this.hazard.location_label;
+    strokeWeight(size);
+    // The splash is the location of a droplet (hazard)
+    pushMatrix();
+    translate(pos.x, pos.y, pos.z);
+    textSize(50);
+    fill(#FFFFFF);
+    text(place, 0, 0);
+    popMatrix();
+  }
+}
+
+class RainSystem {
+  ArrayList<Droplet> droplets;
+
+  RainSystem(List <Hazard> hazardStatement_list_sliced) {
+    droplets = new ArrayList<Droplet>();
+    for (int i = 0; i < hazardStatement_list_sliced.size(); i++) {
+      droplets.add(new Droplet(random(-width, width*2), random(-300), random(-2500, 500),hazardStatement_list_sliced.get(i)));
+    }
+  }
+
+  void run() {
+
+    for (int i = droplets.size() - 1; i >= 0; i--) {
+      if (droplets.get(i).off) {
+        droplets.remove(i);
+      } else {
+        droplets.get(i).update();
+        droplets.get(i).show();
+      }
+    }
+  }
+}
+
+class SplashSystem {
+  ArrayList<Splash> splashes;
+
+  SplashSystem() {
+    splashes = new ArrayList<Splash>();
+  }
+
+  void run() {
+    for (int i = splashes.size() - 1; i >= 0; i--) {
+      if (splashes.get(i).off) {
+        splashes.remove(i);
+      } else {
+        splashes.get(i).update();
+        splashes.get(i).show();
+      }
+    }
+  }
+  
+  void init(float x, float y, float z, float size, Hazard hazard){
+    for (int i = 0; i < size/3; i++) {
+      splashes.add(new Splash(x, y, z, size, hazard));
+    }
+  }
+}

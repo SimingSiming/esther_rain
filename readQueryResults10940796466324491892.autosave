@@ -1,0 +1,26 @@
+  List <Hazard> hazardStatement_list = new ArrayList <Hazard>();
+
+void readQueryResults()
+{
+    JSONObject jsonObjQueryResults = loadJSONObject("query-results-statement-rain.json");
+    JSONArray queryResults = jsonObjQueryResults.getJSONObject("results").getJSONArray("bindings");
+    for (int i = 0; i < queryResults.size(); i++)
+    {
+        String hazard = queryResults.getJSONObject(i).getJSONObject("hazard").getString("value");
+        String hazard_label = queryResults.getJSONObject(i).getJSONObject("hazard_label").getString("value");
+        String hazard_type = queryResults.getJSONObject(i).getJSONObject("hazard_type").getString("value");
+        String time = queryResults.getJSONObject(i).getJSONObject("time").getString("value");
+        String time_label = queryResults.getJSONObject(i).getJSONObject("time_label").getString("value");
+        String location = queryResults.getJSONObject(i).getJSONObject("location").getString("value");
+        String location_label = queryResults.getJSONObject(i).getJSONObject("location_label").getString("value");
+        hazardStatement_list.add(new Hazard(hazard, hazard_label, hazard_type, 
+        time, time_label, location, location_label));
+    }
+    Collections.sort(hazardStatement_list, new Comparator<Hazard>() {
+        @Override
+        public int compare(Hazard hazard1, Hazard hazard2) {
+            //For Ascending Order
+            return hazard1.getStartDateTime().compareTo(hazard2.getStartDateTime());
+        }
+    });
+}
